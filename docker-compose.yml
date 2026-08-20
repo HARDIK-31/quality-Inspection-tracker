@@ -34,8 +34,9 @@ services:
       PORT: 4000
       DATABASE_URL: postgresql://${POSTGRES_USER:-qit}:${POSTGRES_PASSWORD:-qit_password}@postgres:5432/${POSTGRES_DB:-qit}?schema=public
       CORS_ORIGIN: ${CORS_ORIGIN:-*}
-      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-string-in-production}
+      JWT_SECRET: ${JWT_SECRET:-52139b6dc139f737a06bf90bb2ea63878f783cfcdd038766d67bce5273c2748a}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      SAP_WEBHOOK_SECRET: ${SAP_WEBHOOK_SECRET:-x-arvind-001-dhrq24sd3-sap}
       # No-op once the database has rows.
       SEED_ON_START: ${SEED_ON_START:-true}
     ports:

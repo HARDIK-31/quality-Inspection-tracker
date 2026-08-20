@@ -93,7 +93,7 @@ export function NewInspectionPage() {
         htmlFor="machineId"
         required
         error={errors.machineId?.message}
-        hint="Free text, e.g. LOOM-14. Saved in uppercase."
+        hint="e.g. LOOM-14. Saved in uppercase."
       >
         <Input
           id="machineId"
