@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Weave lines under an inspection magnifier. -->
+  <rect width="32" height="32" rx="7" fill="#0f172a" />
+  <g stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round">
+    <path d="M6 11h20M6 16h20M6 21h20" />
+  </g>
+  <circle cx="19" cy="13" r="6" fill="none" stroke="#fb7185" stroke-width="2.4" />
+  <path d="M23.4 17.4 27 21" stroke="#fb7185" stroke-width="2.4" stroke-linecap="round" />
+</svg>

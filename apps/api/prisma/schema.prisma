@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum DefectType {
+  WEAVE_DEFECT
+  SHADE_VARIATION
+  HOLE_TEAR
+  COUNT_DEVIATION
+  OTHER
+}
+
+enum Severity {
+  CRITICAL
+  MAJOR
+  MINOR
+}
+
+enum InspectionStatus {
+  OPEN
+  RESOLVED
+}
+
+enum InspectionSource {
+  MANUAL
+  SAP_WEBHOOK
+}
+
+model Inspection {
+  id String @id @default(uuid())
+
+  // Plain DATE. only the day matters.
+  inspectionDate DateTime @map("inspection_date") @db.Date
+
+  machineId  String     @map("machine_id") @db.VarChar(64)
+  defectType DefectType @map("defect_type")
+  severity   Severity
+  remarks    String?    @db.VarChar(2000)
+
+  status         InspectionStatus @default(OPEN)
+  resolutionNote String?          @map("resolution_note") @db.VarChar(2000)
+  resolvedAt     DateTime?        @map("resolved_at")
+
+  source InspectionSource @default(MANUAL)
+
+  // Idempotency key. SAP sets sap:<notification_no> to survive replays.
+  clientRef String? @unique @map("client_ref") @db.VarChar(64)
+
+  sapPayload Json? @map("sap_payload")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, severity])
+  @@index([inspectionDate(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+  @@map("inspections")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique @db.VarChar(64)
+  passwordHash String   @map("password_hash")
+  displayName  String   @map("display_name") @db.VarChar(120)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}

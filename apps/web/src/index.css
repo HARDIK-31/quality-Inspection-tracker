@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-slate-100 text-slate-900 antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Below 16px iOS zooms the page on focus. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-slate-900;
+  }
+}
+
+@layer utilities {
+  /* Clears the iPhone home indicator. */
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+  .mb-safe {
+    margin-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+}

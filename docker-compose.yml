@@ -1,0 +1,67 @@
+# docker compose up --build
+#   app  http://localhost:8080
+#   api  http://localhost:4000/api/health
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-qit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qit_password}
+      POSTGRES_DB: ${POSTGRES_DB:-qit}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-qit} -d ${POSTGRES_DB:-qit}']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-qit}:${POSTGRES_PASSWORD:-qit_password}@postgres:5432/${POSTGRES_DB:-qit}?schema=public
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-string-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      # No-op once the database has rows.
+      SEED_ON_START: ${SEED_ON_START:-true}
+    ports:
+      - '${API_PORT:-4000}:4000'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:4000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '${WEB_PORT:-8080}:80'
+
+volumes:
+  postgres-data:
