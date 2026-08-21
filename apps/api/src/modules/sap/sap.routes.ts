@@ -78,7 +78,6 @@ sapRoutes.post(
       {
         source: 'SAP_WEBHOOK',
         sapPayload: payload as unknown as Prisma.InputJsonValue,
-        // SAP resends until it gets a 2xx, so key off the notification number.
         clientRef: `sap:${payload.notification_no}`,
       },
     );

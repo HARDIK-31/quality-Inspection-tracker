@@ -10,7 +10,10 @@ const envSchema = z.object({
   // Comma-separated, or * for any origin.
   CORS_ORIGIN: z.string().default('*'),
 
-  JWT_SECRET: z.string().min(16).default('a9e3feaf15997f1c948d0f240a2382589a59aa98a0a6e262395feff3b11f8d36'),
+  JWT_SECRET: z
+    .string()
+    .min(16)
+    .default('a9e3feaf15997f1c948d0f240a2382589a59aa98a0a6e262395feff3b11f8d36'),
   JWT_EXPIRES_IN: z.string().default('12h'),
 
   // When set, the webhook requires a matching x-sap-signature header.

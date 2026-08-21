@@ -48,7 +48,7 @@ model Inspection {
 
   source InspectionSource @default(MANUAL)
 
-  // Idempotency key. SAP sets sap:<notification_no> to survive replays.
+  // Idempotency key. SAP sets sap:<notification_no>.
   clientRef String? @unique @map("client_ref") @db.VarChar(64)
 
   sapPayload Json? @map("sap_payload")

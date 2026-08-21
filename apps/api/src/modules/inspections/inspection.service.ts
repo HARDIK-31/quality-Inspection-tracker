@@ -49,28 +49,8 @@ export async function createInspection(
     ...(options.sapPayload ? { sapPayload: options.sapPayload } : {}),
   };
 
-  try {
-    const row = await prisma.inspection.create({ data });
-    return { inspection: toInspectionDTO(row), created: true };
-  } catch (error) {
-    // Two deliveries raced, the loser reads the winner's row.
-    if (clientRef && isUniqueViolation(error)) {
-      const existing = await prisma.inspection.findUnique({ where: { clientRef } });
-      if (existing) {
-        return { inspection: toInspectionDTO(existing), created: false };
-      }
-    }
-    throw error;
-  }
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    (error as { code?: string }).code === 'P2002'
-  );
+  const row = await prisma.inspection.create({ data });
+  return { inspection: toInspectionDTO(row), created: true };
 }
 
 export interface ListResult {
